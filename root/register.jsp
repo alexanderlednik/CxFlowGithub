@@ -1,5 +1,5 @@
 <%@ page import="java.sql.*" %>
-
+<%@ page import="java.sql.PreparedStatement" %>
 <%@ include file="/dbconnection.jspf" %>
 
 <%
@@ -23,11 +23,25 @@ if (request.getMethod().equals("POST") && username != null) {
 		result = "You must supply a password of at least 5 characters.";
 
 	} else if (password1.equals(password2)) {
-		Statement stmt = conn.createStatement();
+
+//		Statement stmt = conn.createStatement();
 		ResultSet rs = null;
 		try {
-			stmt.executeQuery("INSERT INTO Users (name, type, password) VALUES ('" + username + "', 'USER', '" + password1 + "')");
-			rs = stmt.executeQuery("SELECT * FROM Users WHERE (name = '" + username + "' AND password = '" + password1 + "')");
+		    String sql1 = "INSERT INTO Users (name, type, password) VALUES ('"?"', 'USER', '"?"')";
+		    PreparedStatement preparedStatement1 = con.prepareStatement(sql1);
+		    preparedStatement1.setString(1, username);
+		    preparedStatement1.setString(2, password1);
+		    preparedStatement1.executeQuery();
+
+//			stmt.executeQuery("INSERT INTO Users (name, type, password) VALUES ('" + username + "', 'USER', '" + password1 + "')");
+
+            String sql2 = "SELECT * FROM Users WHERE (name = '"?""' AND password = '"?"')";
+		    PreparedStatement preparedStatement1 = con.prepareStatement(sql1);
+		    preparedStatement1.setString(1, username);
+		    preparedStatement1.setString(2, password1);
+		    rs = preparedStatement1.executeQuery();
+
+//			rs = stmt.executeQuery("SELECT * FROM Users WHERE (name = '" + username + "' AND password = '" + password1 + "')");
 			rs.next();
 			userid =  "" + rs.getInt("userid"); 
 
