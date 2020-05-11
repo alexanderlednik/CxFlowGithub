@@ -1,5 +1,5 @@
 <%@ page import="java.sql.*" %>
-
+<%@ page import="java.sql.PreparedStatement" %>
 <%@ include file="/dbconnection.jspf" %>
 <jsp:include page="/header.jsp"/>
 
@@ -18,10 +18,16 @@ if (password1 != null && password1.length() > 0) {
 	}  else if (password1 == null || password1.length() < 5) {
 		failresult = "You must supply a password of at least 5 characters.";
 	} else {
-		Statement stmt = conn.createStatement();
+
+//		Statement stmt = conn.createStatement();
 		ResultSet rs = null;
 		try {
-			stmt.executeQuery("UPDATE Users set password= '" + password1 + "' where name = '" + username + "'");
+		    String sql = "UPDATE Users set password= ? where name = ?";
+		    PreparedStatement preparedStatement = conn.prepareStatement(sql);
+		    preparedStatement.setString(1, password1);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeQuery();
+//			stmt.executeQuery("UPDATE Users set password= '" + password1 + "' where name = '" + username + "'");
 			
 			okresult = "Your password has been changed";
 
@@ -32,7 +38,7 @@ if (password1 != null && password1.length() > 0) {
 		} catch (Exception e) {
 			failresult = "System error.";
 		} finally {
-			stmt.close();
+			preparedStatement.close();
 		}
 
 	}
